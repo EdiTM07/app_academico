@@ -56,7 +56,7 @@ class AppShellWidget extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.school),label: 'Estudiantes',),
-          BottomNavigationBarItem(icon: Icon(Icons.book),label: 'Estudiantes',),
+          BottomNavigationBarItem(icon: Icon(Icons.book),label: 'Materias',),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
