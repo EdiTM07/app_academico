@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-
 import '../providers/student.provider.dart';
 import '../models/student.model.dart';
 
@@ -92,7 +91,6 @@ class StudentDetailPage extends StatelessWidget {
     );
   }
 
-  // Widget extraído para la cabecera (Mantiene el método build limpio)
   Widget _buildHeader(BuildContext context, Student student) {
     return Container(
       width: double.infinity,
@@ -107,7 +105,7 @@ class StudentDetailPage extends StatelessWidget {
       child: Column(
         children: [
           Hero(
-            tag: 'student-avatar-$id', // Animación de transición fluida
+            tag: 'student-avatar-$id',
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -156,9 +154,7 @@ class StudentDetailPage extends StatelessWidget {
     );
   }
 
-  // Widget extraído para la tarjeta de información
   Widget _buildInfoCard(Student student) {
-    // Formateo de fecha asegurando dos dígitos (ej: 05/09/2023)
     final day = student.birthDate.day.toString().padLeft(2, '0');
     final month = student.birthDate.month.toString().padLeft(2, '0');
     final year = student.birthDate.year.toString();
@@ -191,7 +187,6 @@ class StudentDetailPage extends StatelessWidget {
   }
 }
 
-/// Widget reutilizable ajustado a convenciones de Dart (PascalCase)
 class _InfoTile extends StatelessWidget {
   final IconData icon;
   final String label;

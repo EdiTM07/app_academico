@@ -1,12 +1,12 @@
 import '../../pages/chat.signature.page.dart';
-import '../../pages/materias.detail.page.dart';
+import '../../features/subject/pages/materias.detail.page.dart';
 import 'package:go_router/go_router.dart';
 import '../../pages/chat.page.dart';
 import '../../pages/home.page.dart';
 import '../../pages/profile.page.dart';
 import '../../features/student/pages/students.detail.page.dart';
 import '../../features/student/pages/students.page.dart';
-import '../../pages/materias.page.dart';
+import '../../features/subject/pages/materias.page.dart';
 import '../../widgets/app.shell.widget.dart';
 
 final GoRouter appRouter = GoRouter(
