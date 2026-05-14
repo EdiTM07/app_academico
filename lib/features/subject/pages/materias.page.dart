@@ -12,7 +12,6 @@ class MateriasPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final materias = context.watch<SubjectProvider>().subjects;
 
-    // Estado: Lista vacía
     if (materias.isEmpty) {
       return Center(
         child: Column(
@@ -33,7 +32,6 @@ class MateriasPage extends StatelessWidget {
       );
     }
 
-    // Estado: Con datos (Cambiamos ListView por GridView)
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: materias.length,
@@ -65,13 +63,12 @@ class _MateriaCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          // Usamos el ID real de la materia en tu base de datos
+          
           context.push('/materias/${materia.id}');
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            /// CABECERA VISUAL (Mita superior de la tarjeta)
             Expanded(
               flex: 3,
               child: Container(
@@ -91,7 +88,6 @@ class _MateriaCard extends StatelessWidget {
                       color: Colors.deepPurple,
                     ),
                     const SizedBox(height: 8),
-                    // Etiqueta del código de la materia
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -139,7 +135,7 @@ class _MateriaCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    // Detalles de créditos y horas
+
                     Text(
                       '${materia.credits} Créditos | ${materia.hours}h',
                       style: TextStyle(

@@ -43,20 +43,30 @@ class AppShellWidget extends StatelessWidget {
               context.go('/home');
               break;
             case 1:
-              context.go('/students');
+              context.push('/students');
               break;
             case 2:
-              context.go('/materias');
+              context.push('/materias');
               break;
             case 3:
-            context.go('/profile');
+              context.go('/solicitudes');
+              break;
+            case 4:
+              context.go('/profile');
               break;
           }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.school),label: 'Estudiantes',),
-          BottomNavigationBarItem(icon: Icon(Icons.book),label: 'Materias',),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Estudiantes',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Materias'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book_online),
+            label: 'Solicitudes',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),

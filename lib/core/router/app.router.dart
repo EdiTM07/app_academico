@@ -1,3 +1,6 @@
+
+import '../../features/student/pages/students.home.page.dart';
+import '../../features/subject/pages/materias.home.page.dart';
 import '../../pages/chat.signature.page.dart';
 import '../../features/subject/pages/materias.detail.page.dart';
 import 'package:go_router/go_router.dart';
@@ -5,8 +8,6 @@ import '../../pages/chat.page.dart';
 import '../../pages/home.page.dart';
 import '../../pages/profile.page.dart';
 import '../../features/student/pages/students.detail.page.dart';
-import '../../features/student/pages/students.page.dart';
-import '../../features/subject/pages/materias.page.dart';
 import '../../widgets/app.shell.widget.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -16,26 +17,11 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state, child) {
         return AppShellWidget(child: child);
       },
-
       routes: [
         GoRoute(
           path: '/home',
           builder: (context, state) {
             return const HomePage();
-          },
-        ),
-
-        GoRoute(
-          path: '/students',
-          builder: (context, state) {
-            return const StudentsPage();
-          },
-        ),
-
-        GoRoute(
-          path: '/materias',
-          builder: (context, state) {
-            return const MateriasPage();
           },
         ),
 
@@ -49,11 +35,21 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/student/:id',
-
       builder: (context, state) {
         final id = state.pathParameters['id']!;
-
         return StudentDetailPage(id: id);
+      },
+    ),
+    GoRoute(
+      path: '/students',
+      builder: (context, state) {
+        return StudentsHomePage();
+      },
+    ),
+    GoRoute(
+      path: '/materias',
+      builder: (context, state) {
+        return MateriasHomePage();
       },
     ),
     GoRoute(
