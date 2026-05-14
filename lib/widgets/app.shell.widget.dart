@@ -64,7 +64,7 @@ class AppShellWidget extends StatelessWidget {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Materias'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_online),
+            icon: Icon(Icons.description),
             label: 'Solicitudes',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),

@@ -1,4 +1,5 @@
-
+import '../../features/student/models/student.model.dart';
+import '../../features/student/pages/students.form.page.dart';
 import '../../features/student/pages/students.home.page.dart';
 import '../../features/subject/pages/materias.home.page.dart';
 import '../../pages/chat.signature.page.dart';
@@ -44,6 +45,13 @@ final GoRouter appRouter = GoRouter(
       path: '/students',
       builder: (context, state) {
         return StudentsHomePage();
+      },
+    ),
+    GoRoute(
+      path: '/students/form',
+      builder: (context, state) {
+        final student = state.extra as Student?;
+        return StudentsFormPages(student: student);
       },
     ),
     GoRoute(
