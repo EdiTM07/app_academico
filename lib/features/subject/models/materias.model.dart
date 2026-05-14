@@ -21,7 +21,7 @@ class SubjectResponse {
 }
 
 class Subject {
-    int id; // Mantenido por convención de base de datos
+    int id;
     String code;
     String name;
     int credits;

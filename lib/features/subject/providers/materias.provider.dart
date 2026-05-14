@@ -32,13 +32,11 @@ class SubjectProvider extends ChangeNotifier {
   /// DELETE
   void deleteSubject(int id) {
     try {
-      // Precaución al eliminar: Manejamos posibles restricciones de claves foráneas 
-      // en caso de que la materia ya esté asociada a otras tablas.
+
       _repository.delete(id);
       loadSubjects();
     } catch (e) {
       debugPrint('Error al eliminar: Verifica que la materia no tenga claves foráneas en otras tablas. Detalle: $e');
-      // Aquí podrías lanzar una excepción para capturarla en la UI y mostrar un SnackBar al usuario
       rethrow; 
     }
   }
