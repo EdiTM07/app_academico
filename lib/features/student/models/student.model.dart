@@ -30,6 +30,7 @@ class Student {
     String email;
     String phone;
     String photoUrl;
+    int careerId;
 
     Student({
         required this.id,
@@ -41,6 +42,7 @@ class Student {
         required this.email,
         required this.phone,
         required this.photoUrl,
+       required this.careerId,
     });
 
     factory Student.fromJson(Map<String, dynamic> json) => Student(
@@ -53,6 +55,7 @@ class Student {
         email: json["email"],
         phone: json["phone"],
         photoUrl: json["photoUrl"],
+        careerId: json["careerId"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -65,5 +68,7 @@ class Student {
         "email": email,
         "phone": phone,
         "photoUrl": photoUrl,
+        "careerId": careerId,
+        
     };
 }

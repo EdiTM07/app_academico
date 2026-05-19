@@ -1,40 +1,49 @@
 import 'package:flutter/material.dart';
+import '../../career/repository/career.repository.dart';
 import '../models/student.model.dart';
+import '../models/student_view.dart';
 import '../repositories/student.repository.dart';
 
 class StudentProvider extends ChangeNotifier {
-  
-  final StudentRepository _repository = StudentRepository();
+  final StudentRepository _studentRepo = StudentRepository();
+  final CareerRepository _careerRepo = CareerRepository();
 
-  List<Student> _students = [];
+  List<StudentView> _studentsView = [];
+  List<StudentView> get students => _studentsView;
 
-  List<Student> get students => _students;
-
-  /// INIT
   void loadStudents() {
-    _students = _repository.getAll();
-    notifyListeners();
+    final rawStudents = _studentRepo.getAll(); 
+    final careers = _careerRepo.getAll();
+
+    _studentsView = rawStudents.map((student) {
+      final career = careers.firstWhere(
+        (c) => c.id == student.careerId,
+        orElse: () => throw Exception("Carrera no encontrada"),
+      );
+      
+      return StudentView(
+        student: student,
+        career: career,
+      );
+    }).toList();
+
+    notifyListeners(); 
   }
 
-  /// CREATE
   void addStudent(Student student) {
-    _repository.add(student);
+    _studentRepo.add(student);
     loadStudents();
   }
 
-  /// UPDATE
   void updateStudent(Student student) {
-    _repository.update(student);
+    _studentRepo.update(student);
     loadStudents();
   }
 
-  /// DELETE
   void deleteStudent(int id) {
-    _repository.delete(id);
+    _studentRepo.delete(id);
     loadStudents();
   }
 
-  Student? getById(int id) {
-    return _repository.getById(id);
-  }
+  Student? getById(int id) => _studentRepo.getById(id);
 }

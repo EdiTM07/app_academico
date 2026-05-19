@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../career/providers/career.provider.dart';
 import '../models/student.model.dart';
 import '../providers/student.provider.dart';
 
@@ -15,11 +15,14 @@ class StudentsFormPages extends StatefulWidget {
 
 class _StudentsFormPageState extends State<StudentsFormPages> {
   final _formKey = GlobalKey<FormState>();
-  // Controlar objeto de los formularios
+
   late final TextEditingController _codeCtrl;
   late final TextEditingController _firstnameCtrl;
   late final TextEditingController _lastNameCtrl;
-  // Si es diferente de null estamos editando
+
+  // Variable local para controlar la relación institucional
+  int? _selectedCareerId;
+
   bool get isEdit => widget.student != null;
 
   @override
@@ -29,6 +32,16 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
     _codeCtrl = TextEditingController(text: s?.code ?? '');
     _firstnameCtrl = TextEditingController(text: s?.firstName ?? '');
     _lastNameCtrl = TextEditingController(text: s?.lastName ?? '');
+
+    _selectedCareerId = s?.careerId;
+  }
+
+  @override
+  void dispose() {
+    _codeCtrl.dispose();
+    _firstnameCtrl.dispose();
+    _lastNameCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,14 +59,51 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _SectionTitle(title: 'Información Academica'),
+                  const _SectionTitle(title: 'Información Académica'),
+
                   _buildTextField(
                     _codeCtrl,
                     'Código',
                     Icons.badge,
                     required: true,
                   ),
-                  _SectionTitle(title: 'Datos Personales'),
+
+                  // DROPDOWN DE CARRERAS
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Consumer<CareerProvider>(
+                      builder: (context, careerProvider, _) {
+                        final careers = careerProvider.careers;
+
+                        return DropdownButtonFormField<int>(
+                          value: _selectedCareerId,
+                          decoration: const InputDecoration(
+                            labelText: 'Carrera',
+                            prefixIcon: Icon(
+                              Icons.school,
+                              color: Colors.blueGrey,
+                            ),
+                            border: OutlineInputBorder(),
+                          ),
+                          items: careers.map((career) {
+                            return DropdownMenuItem<int>(
+                              value: career.id,
+                              child: Text(career.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCareerId = value;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? 'Seleccione una carrera' : null,
+                        );
+                      },
+                    ),
+                  ),
+
+                  const _SectionTitle(title: 'Datos Personales'),
                   _buildTextField(
                     _firstnameCtrl,
                     'Nombre',
@@ -108,15 +158,16 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
     final provider = context.read<StudentProvider>();
 
     final student = Student(
-      id: widget.student?.id ?? 0,
+      id: widget.student?.id ?? DateTime.now().millisecondsSinceEpoch,
       code: _codeCtrl.text.trim(),
       firstName: _firstnameCtrl.text.trim(),
       lastName: _lastNameCtrl.text.trim(),
-      gender: "F",
-      birthDate: DateTime(200, 6, 10),
-      email: "correo@ejemplo.com",
-      phone: '100',
-      photoUrl: '',
+      careerId: _selectedCareerId!,
+      gender: widget.student?.gender ?? "M",
+      birthDate: widget.student?.birthDate ?? DateTime(2005, 5, 10),
+      email: widget.student?.email ?? "correo@ejemplo.com",
+      phone: widget.student?.phone ?? "0999999999",
+      photoUrl: widget.student?.photoUrl ?? "",
     );
 
     isEdit ? provider.updateStudent(student) : provider.addStudent(student);
@@ -125,7 +176,6 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
   }
 }
 
-// Widgets auxiliares para limpieza visual
 class _SectionTitle extends StatelessWidget {
   final String title;
   const _SectionTitle({required this.title});

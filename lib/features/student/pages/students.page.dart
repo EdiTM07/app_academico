@@ -9,41 +9,46 @@ class StudentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final studentsView = context.watch<StudentProvider>().students;
 
-    /// ESCUCHA EL PROVIDER
-    final students = context.watch<StudentProvider>().students;
-
-    if (students.isEmpty) {
-      return const Center(
-        child: Text("No hay estudiantes"),
-      );
+    if (studentsView.isEmpty) {
+      return const Center(child: Text("No hay estudiantes"));
     }
 
     return GridView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: students.length,
-
+      itemCount: studentsView.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
         childAspectRatio: 0.75,
       ),
-
       itemBuilder: (context, index) {
-        final student = students[index];
+        final view = studentsView[index];
+        final student = view.student;
+        final career = view.career;
 
-        return _StudentCard(nombre: "${student.firstName} ${student.lastName}", id: student.id);
+        return _StudentCard(
+          id: student.id,
+          nombre: "${student.firstName} ${student.lastName}",
+          carrera: career.name,
+        );
       },
     );
   }
 }
 
 class _StudentCard extends StatelessWidget {
-  final String nombre;
   final int id;
+  final String nombre;
+  final String carrera;
 
-  const _StudentCard({required this.nombre, required this.id});
+  const _StudentCard({
+    required this.id,
+    required this.nombre,
+    required this.carrera,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +56,9 @@ class _StudentCard extends StatelessWidget {
       onTap: () {
         context.push('/student/$id');
       },
-
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -68,7 +71,6 @@ class _StudentCard extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   color: Colors.indigo.shade100,
-
                   child: const Icon(
                     Icons.person,
                     size: 70,
@@ -85,17 +87,24 @@ class _StudentCard extends StatelessWidget {
                 children: [
                   Text(
                     nombre,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 15,
                     ),
                   ),
-
                   const SizedBox(height: 4),
 
-                  const Text(
-                    'Estudiante',
-                    style: TextStyle(color: Colors.grey),
+                  Text(
+                    carrera,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),

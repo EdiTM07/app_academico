@@ -13,6 +13,7 @@ class StudentRepository {
       email: "juan@email.com",
       phone: "0999999999",
       photoUrl: "",
+      careerId: 2
     ),
     Student(
       id: 2,
@@ -24,6 +25,7 @@ class StudentRepository {
       email: "maria@email.com",
       phone: "0988888888",
       photoUrl: "",
+      careerId: 1
     ),
     Student(
       id: 3,
@@ -35,6 +37,7 @@ class StudentRepository {
       email: "editm1997@gmail.com",
       phone: "0985365554",
       photoUrl: "",
+      careerId: 3
     ),
   ];
 
