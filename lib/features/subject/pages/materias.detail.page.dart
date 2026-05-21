@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/widgets/info.title.dart';
 import '../models/materias.model.dart';
-import '../providers/materias.provider.dart';   
+import '../providers/materias.provider.dart';
 
 class MateriasDetailPage extends StatelessWidget {
   final String id;
@@ -13,13 +14,13 @@ class MateriasDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. Escuchar el Provider
     final provider = context.watch<SubjectProvider>();
-    
+
     // 2. Convertir el ID de String a int
     final subjectId = int.tryParse(id);
 
     // 3. Buscar la materia en el repositorio
-    final Subject? subject = subjectId != null 
-        ? provider.getById(subjectId) 
+    final Subject? subject = subjectId != null
+        ? provider.getById(subjectId)
         : null;
 
     // Estado: Materia no encontrada
@@ -33,7 +34,11 @@ class MateriasDetailPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.menu_book_outlined, size: 80, color: Colors.grey.shade400),
+              Icon(
+                Icons.menu_book_outlined,
+                size: 80,
+                color: Colors.grey.shade400,
+              ),
               const SizedBox(height: 16),
               Text(
                 'Materia no encontrada',
@@ -59,7 +64,7 @@ class MateriasDetailPage extends StatelessWidget {
           children: [
             // Cabecera visual con los datos principales
             _buildHeader(context, subject),
-            
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -68,16 +73,20 @@ class MateriasDetailPage extends StatelessWidget {
                   Center(
                     child: Text(
                       'Esta pantalla NO pertenece al ShellRoute.',
-                      style: TextStyle(fontSize: 13, color: Colors.grey.shade500, fontStyle: FontStyle.italic),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade500,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Tarjeta con los detalles académicos
                   _buildInfoCard(context, subject),
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // Botón de Acción Principal (Chat)
                   SizedBox(
                     height: 55,
@@ -92,11 +101,14 @@ class MateriasDetailPage extends StatelessWidget {
                         // Navegación original que solicitaste
                         context.push('/chat-signature');
                       },
-                      icon: const Icon(Icons.forum_outlined, color: Colors.white),
+                      icon: const Icon(
+                        Icons.forum_outlined,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Abrir Chat de materia',
                         style: TextStyle(
-                          fontSize: 16, 
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -145,7 +157,7 @@ class MateriasDetailPage extends StatelessWidget {
               subject.name,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 24, 
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurple.shade900,
                 height: 1.2,
@@ -163,7 +175,7 @@ class MateriasDetailPage extends StatelessWidget {
             child: Text(
               'Código: ${subject.code}',
               style: const TextStyle(
-                fontSize: 14, 
+                fontSize: 14,
                 color: Colors.deepPurple,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
@@ -180,73 +192,31 @@ class MateriasDetailPage extends StatelessWidget {
     return Card(
       elevation: 2,
       shadowColor: Colors.deepPurple.withOpacity(0.1),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
           children: [
-            _InfoTile(
-              icon: Icons.account_tree_outlined, 
-              label: "Área de Conocimiento", 
+            InfoTitle(
+              icon: Icons.account_tree_outlined,
+              label: "Área de Conocimiento",
               value: subject.knowledgeArea,
             ),
             const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
-              icon: Icons.stars_outlined, 
-              label: "Créditos", 
+            InfoTitle(
+              icon: Icons.stars_outlined,
+              label: "Créditos",
               value: '${subject.credits} Créditos',
             ),
             const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
-              icon: Icons.schedule_outlined, 
-              label: "Carga Horaria", 
+            InfoTitle(
+              icon: Icons.schedule_outlined,
+              label: "Carga Horaria",
               value: '${subject.hours} Horas en total',
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-/// Componente visual reutilizable para los listados de información
-class _InfoTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _InfoTile({
-    required this.icon, 
-    required this.label, 
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.deepPurple.shade50,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: Colors.deepPurple, size: 22),
-      ),
-      title: Text(
-        label,
-        style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-      ),
-      subtitle: Text(
-        value,
-        style: const TextStyle(
-          fontSize: 16, 
-          color: Colors.black87,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      dense: true,
     );
   }
 }

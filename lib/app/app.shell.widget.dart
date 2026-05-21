@@ -30,15 +30,17 @@ class AppShellWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mini Universidad')),
+      appBar: AppBar(title: const Text('Mini Universidad'), centerTitle: false),
+
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 250),
         child: child,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: obtenerIndex(context),
-        onTap: (index) {
+
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: obtenerIndex(context),
+
+        onDestinationSelected: (index) {
           switch (index) {
             case 0:
               context.go('/home');
@@ -57,18 +59,35 @@ class AppShellWidget extends StatelessWidget {
               break;
           }
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+
+          NavigationDestination(
+            icon: Icon(Icons.school_outlined),
+            selectedIcon: Icon(Icons.school),
             label: 'Estudiantes',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Materias'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.description),
+
+          NavigationDestination(
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book),
+            label: 'Materias',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.description_outlined),
+            selectedIcon: Icon(Icons.description),
             label: 'Solicitudes',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
         ],
       ),
     );

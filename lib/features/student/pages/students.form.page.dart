@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../core/widgets/section.title.dart';
 import '../../career/providers/career.provider.dart';
 import '../models/student.model.dart';
 import '../providers/student.provider.dart';
@@ -59,7 +60,7 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const _SectionTitle(title: 'Información Académica'),
+                  const SectionTitle(title: 'Información Académica'),
 
                   _buildTextField(
                     _codeCtrl,
@@ -103,7 +104,7 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
                     ),
                   ),
 
-                  const _SectionTitle(title: 'Datos Personales'),
+                  const SectionTitle(title: 'Datos Personales'),
                   _buildTextField(
                     _firstnameCtrl,
                     'Nombre',
@@ -176,24 +177,7 @@ class _StudentsFormPageState extends State<StudentsFormPages> {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle({required this.title});
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Colors.blueGrey,
-        ),
-      ),
-    );
-  }
-}
 
 class _SaveButton extends StatelessWidget {
   final VoidCallback onPressed;

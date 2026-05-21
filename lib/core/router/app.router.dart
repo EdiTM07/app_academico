@@ -5,6 +5,7 @@ import '../../features/student/models/student.model.dart';
 import '../../features/student/pages/students.form.page.dart';
 import '../../features/student/pages/students.home.page.dart';
 import '../../features/subject/pages/materias.home.page.dart';
+import '../../features/welcome/welcome.page.dart';
 import '../../pages/chat.signature.page.dart';
 import '../../features/subject/pages/materias.detail.page.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +13,10 @@ import '../../pages/chat.page.dart';
 import '../../pages/home.page.dart';
 import '../../pages/profile.page.dart';
 import '../../features/student/pages/students.detail.page.dart';
-import '../../widgets/app.shell.widget.dart';
+import '../../app/app.shell.widget.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -35,6 +36,16 @@ final GoRouter appRouter = GoRouter(
           },
         ),
       ],
+    ),
+
+    /// ==========================================
+    /// RUTA Welcome
+    /// ==========================================
+    GoRoute(
+      path: '/',
+      builder: (context, state) {
+        return const WelcomePage();
+      },
     ),
 
     /// ==========================================

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/widgets/info.title.dart';
 import '../providers/student.provider.dart';
 import '../models/student_view.dart';
 
@@ -195,25 +196,25 @@ class StudentDetailPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
           children: [
-            _InfoTile(
+            InfoTitle(
               icon: Icons.badge_outlined,
               label: "Género",
               value: student.gender,
             ),
             const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
+            InfoTitle(
               icon: Icons.email_outlined,
               label: "Email",
               value: student.email,
             ),
             const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
+            InfoTitle(
               icon: Icons.phone_outlined,
               label: "Teléfono",
               value: student.phone,
             ),
             const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
+            InfoTitle(
               icon: Icons.cake_outlined,
               label: "Fecha nacimiento",
               value: "$day/$month/$year",
@@ -221,34 +222,6 @@ class StudentDetailPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _InfoTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.secondary),
-      title: Text(
-        label,
-        style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-      ),
-      subtitle: Text(
-        value,
-        style: const TextStyle(fontSize: 15, color: Colors.black87),
-      ),
-      dense: true,
     );
   }
 }

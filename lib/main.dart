@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'app.widget.dart';
+import 'app/app.widget.dart';
 import 'features/career/providers/career.provider.dart';
 import 'features/solicitud/providers/solicitud.provider.dart';
 import 'features/student/providers/student.provider.dart';
