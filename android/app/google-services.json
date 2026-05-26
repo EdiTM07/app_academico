@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "963399846927",
+    "project_id": "academico-itsi-83805",
+    "storage_bucket": "academico-itsi-83805.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963399846927:android:6d273a568218a735bf677a",
+        "android_client_info": {
+          "package_name": "com.example.app_academico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4urQ5qOgyG1WFBzCJMVKzcqJsR87jrlI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

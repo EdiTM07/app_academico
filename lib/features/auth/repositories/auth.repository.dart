@@ -1,7 +1,7 @@
 import '../models/auth_user.model.dart';
 
 class AuthRepository {
-  // Credenciales de prueba en memoria (mismo patrón que el resto del proyecto)
+  // Credenciales de prueba en memoria
   static const List<Map<String, String>> _users = [
     {'email': 'admin@uni.edu', 'password': '123456', 'name': 'Administrador'},
     {'email': 'docente@uni.edu', 'password': 'docente1', 'name': 'Docente'},

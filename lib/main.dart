@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 
 import 'app/app.widget.dart';
 import 'features/auth/providers/auth.provider.dart';
@@ -8,7 +11,12 @@ import 'features/solicitud/providers/solicitud.provider.dart';
 import 'features/student/providers/student.provider.dart';
 import 'features/subject/providers/materias.provider.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // Inicializa firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
     MultiProvider(
       providers: [
