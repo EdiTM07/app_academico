@@ -1,6 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../features/auth/pages/login.page.dart';
+import '../../features/auth/providers/auth.provider.dart';
 import '../../features/solicitud/pages/solicitud.form.page.dart';
 import '../../features/solicitud/pages/solicitud.home.page.dart';
-import '../../features/solicitud/pages/solicitud.detail.page.dart'; // 1. IMPORTA LA PÁGINA DE DETALLE DE SOLICITUD
+import '../../features/solicitud/pages/solicitud.detail.page.dart';
 import '../../features/student/models/student.model.dart';
 import '../../features/student/pages/students.form.page.dart';
 import '../../features/student/pages/students.home.page.dart';
@@ -8,7 +14,6 @@ import '../../features/subject/pages/materias.home.page.dart';
 import '../../features/welcome/welcome.page.dart';
 import '../../pages/chat.signature.page.dart';
 import '../../features/subject/pages/materias.detail.page.dart';
-import 'package:go_router/go_router.dart';
 import '../../pages/chat.page.dart';
 import '../../pages/home.page.dart';
 import '../../pages/profile.page.dart';
@@ -17,6 +22,28 @@ import '../../app/app.shell.widget.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
+
+  /// ==========================================
+  /// GUARD DE AUTENTICACIÓN
+  /// ==========================================
+  redirect: (BuildContext context, GoRouterState state) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final isAuth = auth.isAuthenticated;
+    final location = state.matchedLocation;
+
+    // Rutas públicas que no requieren login
+    final publicRoutes = ['/', '/login'];
+    final isPublic = publicRoutes.contains(location);
+
+    // Si no está autenticado y quiere entrar a una ruta protegida → login
+    if (!isAuth && !isPublic) return '/login';
+
+    // Si ya está autenticado y va al login → home
+    if (isAuth && location == '/login') return '/home';
+
+    return null; // Sin redirección
+  },
+
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -39,12 +66,22 @@ final GoRouter appRouter = GoRouter(
     ),
 
     /// ==========================================
-    /// RUTA Welcome
+    /// RUTA Welcome (Splash)
     /// ==========================================
     GoRoute(
       path: '/',
       builder: (context, state) {
         return const WelcomePage();
+      },
+    ),
+
+    /// ==========================================
+    /// RUTA LOGIN
+    /// ==========================================
+    GoRoute(
+      path: '/login',
+      builder: (context, state) {
+        return const LoginPage();
       },
     ),
 

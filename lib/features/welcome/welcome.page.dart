@@ -23,7 +23,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void _goToHome() {
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
-      context.go('/home');
+      context.go('/login');
     });
   }
 

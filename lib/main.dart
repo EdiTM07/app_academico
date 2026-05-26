@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'app/app.widget.dart';
+import 'features/auth/providers/auth.provider.dart';
 import 'features/career/providers/career.provider.dart';
 import 'features/solicitud/providers/solicitud.provider.dart';
 import 'features/student/providers/student.provider.dart';
@@ -11,6 +12,10 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        // AuthProvider debe ir primero para que el redirect guard lo encuentre
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
         ChangeNotifierProvider(
           create: (_) => StudentProvider()..loadStudents(),
         ),
