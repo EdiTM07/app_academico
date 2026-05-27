@@ -58,3 +58,4 @@ class StudentProvider extends ChangeNotifier {
     return await _repository.getById(id);
   }
 }
+

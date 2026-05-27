@@ -9,30 +9,29 @@ class StudentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentsView = context.watch<StudentProvider>().students;
+    final estudiantes = context.watch<StudentProvider>().students;
 
-    if (studentsView.isEmpty) {
-      return const Center(child: Text("No hay estudiantes"));
+    /// LOADING
+    if (estudiantes.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
-
     return GridView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: studentsView.length,
+      itemCount: estudiantes.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
         childAspectRatio: 0.75,
       ),
-      itemBuilder: (context, index) {
-        final view = studentsView[index];
-        final student = view.student;
-        final academicProgram = view.academicProgram;
 
+      itemBuilder: (context, index) {
+        final estudiante = estudiantes[index].student;
         return _StudentCard(
-          id: student.id,
-          nombre: "${student.firstName} ${student.lastName}",
-          carrera: academicProgram.name,
+          nombre:
+              "${estudiante.firstName} "
+              "${estudiante.lastName}",
+          id: estudiante.id,
         );
       },
     );
@@ -40,21 +39,16 @@ class StudentsPage extends StatelessWidget {
 }
 
 class _StudentCard extends StatelessWidget {
-  final int id;
   final String nombre;
-  final String carrera;
+  final int id;
 
-  const _StudentCard({
-    required this.id,
-    required this.nombre,
-    required this.carrera,
-  });
+  const _StudentCard({required this.nombre, required this.id});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/student/$id');
+        context.push("/student/$id");
       },
       child: Card(
         elevation: 4,
@@ -80,31 +74,22 @@ class _StudentCard extends StatelessWidget {
               ),
             ),
 
-            /// INFORMACIÓN
+            /// INFO
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
                   Text(
                     nombre,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 4),
-
-                  Text(
-                    carrera,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
+                  const Text(
+                    'Estudiante',
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),

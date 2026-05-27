@@ -131,7 +131,7 @@ class _StudentsFormPageState extends State<StudentsFormPage> {
                   DropdownButtonFormField<int>(
                     value: selectedAcademicProgramId,
                     decoration: const InputDecoration(
-                      labelText: 'Carrera',
+                      labelText: 'Carreras',
                       prefixIcon: Icon(Icons.school),
                       border: OutlineInputBorder(),
                     ),

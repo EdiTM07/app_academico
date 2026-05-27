@@ -5,37 +5,31 @@ Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
 String welcomeToJson(Welcome data) => json.encode(data.toJson());
 
 class Welcome {
-    List<AcademicProgram> academicPrograms;
+  List<AcademicProgram> academicProgram;
 
-    Welcome({
-        required this.academicPrograms,
-    });
+  Welcome({required this.academicProgram});
 
-    factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
-        academicPrograms: List<AcademicProgram>.from(json["academic_programs"].map((x) => AcademicProgram.fromJson(x))),
-    );
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+    academicProgram: List<AcademicProgram>.from(
+      json["academic_program"].map((x) => AcademicProgram.fromJson(x)),
+    ),
+  );
 
-    Map<String, dynamic> toJson() => {
-        "academic_programs": List<dynamic>.from(academicPrograms.map((x) => x.toJson())),
-    };
+  Map<String, dynamic> toJson() => {
+    "academic_program": List<dynamic>.from(
+      academicProgram.map((x) => x.toJson()),
+    ),
+  };
 }
 
 class AcademicProgram {
-    int id;
-    String name;
+  int id;
+  String name;
 
-    AcademicProgram({
-        required this.id,
-        required this.name,
-    });
+  AcademicProgram({required this.id, required this.name});
 
-    factory AcademicProgram.fromJson(Map<String, dynamic> json) => AcademicProgram(
-        id: json["id"],
-        name: json["name"],
-    );
+  factory AcademicProgram.fromJson(Map<String, dynamic> json) =>
+      AcademicProgram(id: json["id"], name: json["name"]);
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-    };
+  Map<String, dynamic> toJson() => {"id": id, "name": name};
 }

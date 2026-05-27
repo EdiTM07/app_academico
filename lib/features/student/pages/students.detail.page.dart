@@ -53,7 +53,7 @@ class StudentDetailPage extends StatelessWidget {
                     icon: const Icon(Icons.edit),
                     onPressed: () async {
                       final result = await context.push(
-                        '/student/form',
+                        '/students/form',
                         extra: student,
                       );
                       if (result == true && context.mounted) {

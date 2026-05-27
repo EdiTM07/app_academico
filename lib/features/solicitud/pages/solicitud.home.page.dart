@@ -16,9 +16,11 @@ class SolicitudHomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await context.push('/solicitudes/form', extra: null);
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Solicitud creada')));
+          if (result == true && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Solicitud creada correctamente')),
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
