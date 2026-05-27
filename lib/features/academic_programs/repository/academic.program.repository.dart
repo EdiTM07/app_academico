@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/academic.program.model.dart';
+import '../model/academic.program.model.dart';
 
 class AcademicProgramRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

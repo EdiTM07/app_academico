@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/academic.program.model.dart';
-import '../repositories/academic.program.repository.dart';
+import '../model/academic.program.model.dart';
+import '../repository/academic.program.repository.dart';
 
 class AcademicProgramProvider extends ChangeNotifier {
   final AcademicProgramRepository _repository = AcademicProgramRepository();

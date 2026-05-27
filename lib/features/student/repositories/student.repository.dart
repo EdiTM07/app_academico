@@ -1,74 +1,85 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/student.model.dart';
 
 class StudentRepository {
-  /// Simulación de base de datos en memoria
-  final List<Student> _students = [
-    Student(
-      id: 1,
-      code: "STU001",
-      firstName: "Juan",
-      lastName: "Pérez",
-      gender: "M",
-      birthDate: DateTime(2005, 5, 10),
-      email: "juan@email.com",
-      phone: "0999999999",
-      photoUrl: "",
-      careerId: 2
-    ),
-    Student(
-      id: 2,
-      code: "STU002",
-      firstName: "María",
-      lastName: "Lopez",
-      gender: "F",
-      birthDate: DateTime(2006, 3, 15),
-      email: "maria@email.com",
-      phone: "0988888888",
-      photoUrl: "",
-      careerId: 1
-    ),
-    Student(
-      id: 3,
-      code: "STU003",
-      firstName: "Edison",
-      lastName: "Tituana",
-      gender: "M",
-      birthDate: DateTime(1997, 5, 30),
-      email: "editm1997@gmail.com",
-      phone: "0985365554",
-      photoUrl: "",
-      careerId: 3
-    ),
-  ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String _collection = 'students';
 
+  /// ============================
   /// GET ALL
-  List<Student> getAll() {
-    return _students;
+  /// ============================
+  Future<List<Student>> getAll() async {
+    final snapshot = await _firestore.collection(_collection).get();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return Student.fromJson({
+        ...data,
+        /// Convertir timestamp a string
+        'birthDate': (data['birthDate'] as Timestamp)
+            .toDate()
+            .toIso8601String(),
+      });
+    }).toList();
   }
 
+  /// ============================
   /// GET BY ID
-  Student? getById(int id) {
-    return _students.firstWhere(
-      (s) => s.id == id,
-      orElse: () => throw Exception("Student not found"),
-    );
-  }
-
-  /// INSERT
-  void add(Student student) {
-    _students.add(student);
-  }
-
-  /// UPDATE
-  void update(Student student) {
-    final index = _students.indexWhere((s) => s.id == student.id);
-    if (index != -1) {
-      _students[index] = student;
+  /// ============================
+  Future<Student?> getById(int id) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return null;
     }
+    final data = snapshot.docs.first.data();
+    return Student.fromJson({
+      ...data,
+      'birthDate': (data['birthDate'] as Timestamp).toDate().toIso8601String(),
+    });
   }
 
+  /// ============================
+  /// INSERT
+  /// ============================
+  Future<void> add(Student student) async {
+    await _firestore.collection(_collection).add({
+      ...student.toJson(),
+      'birthDate': Timestamp.fromDate(student.birthDate),
+    });
+  }
+
+  /// ============================
+  /// UPDATE
+  /// ============================
+  Future<void> update(Student student) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: student.id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      throw Exception('Student not found');
+    }
+    final docId = snapshot.docs.first.id;
+    await _firestore.collection(_collection).doc(docId).update({
+      ...student.toJson(),
+      'birthDate': Timestamp.fromDate(student.birthDate),
+    });
+  }
+
+  /// ============================
   /// DELETE
-  void delete(int id) {
-    _students.removeWhere((s) => s.id == id);
+  /// ============================
+  Future<void> delete(int id) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return;
+    }
+    final docId = snapshot.docs.first.id;
+    await _firestore.collection(_collection).doc(docId).delete();
   }
 }

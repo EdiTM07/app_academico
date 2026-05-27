@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final studentResponse = studentResponseFromJson(jsonString);
+
 import 'dart:convert';
 
 StudentResponse studentResponseFromJson(String str) => StudentResponse.fromJson(json.decode(str));
@@ -30,7 +34,8 @@ class Student {
     String email;
     String phone;
     String photoUrl;
-    int careerId;
+    int academicProgramId;
+
 
     Student({
         required this.id,
@@ -42,8 +47,9 @@ class Student {
         required this.email,
         required this.phone,
         required this.photoUrl,
-       required this.careerId,
+        required this.academicProgramId,
     });
+
 
     factory Student.fromJson(Map<String, dynamic> json) => Student(
         id: json["id"],
@@ -55,8 +61,9 @@ class Student {
         email: json["email"],
         phone: json["phone"],
         photoUrl: json["photoUrl"],
-        careerId: json["careerId"],
+        academicProgramId: json["academicProgramId"] as int,
     );
+
 
     Map<String, dynamic> toJson() => {
         "id": id,
@@ -68,7 +75,7 @@ class Student {
         "email": email,
         "phone": phone,
         "photoUrl": photoUrl,
-        "careerId": careerId,
-        
+        "academicProgramId": academicProgramId,
+
     };
 }

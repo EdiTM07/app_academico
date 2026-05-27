@@ -27,12 +27,12 @@ class StudentsPage extends StatelessWidget {
       itemBuilder: (context, index) {
         final view = studentsView[index];
         final student = view.student;
-        final career = view.career;
+        final academicProgram = view.academicProgram;
 
         return _StudentCard(
           id: student.id,
           nombre: "${student.firstName} ${student.lastName}",
-          carrera: career.name,
+          carrera: academicProgram.name,
         );
       },
     );

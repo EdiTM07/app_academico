@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 
 import 'app/app.widget.dart';
 import 'features/auth/providers/auth.provider.dart';
-import 'features/career/providers/career.provider.dart';
+import 'features/academic_programs/providers/academic.program.provider.dart';
 import 'features/solicitud/providers/solicitud.provider.dart';
 import 'features/student/providers/student.provider.dart';
 import 'features/subject/providers/materias.provider.dart';
@@ -34,7 +34,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => DocumentProvider()..loadDocuments(),
         ),
-        ChangeNotifierProvider(create: (_) => CareerProvider()..loadCareers()),
+        ChangeNotifierProvider(create: (_) => AcademicProgramProvider()..loadAcademicPrograms()),
       ],
       child: const AppWidget(),
     ),

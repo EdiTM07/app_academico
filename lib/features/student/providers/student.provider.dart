@@ -1,49 +1,60 @@
 import 'package:flutter/material.dart';
-import '../../career/repository/career.repository.dart';
+import '../../academic_programs/repository/academic.program.repository.dart';
 import '../models/student.model.dart';
 import '../models/student_view.dart';
 import '../repositories/student.repository.dart';
 
 class StudentProvider extends ChangeNotifier {
-  final StudentRepository _studentRepo = StudentRepository();
-  final CareerRepository _careerRepo = CareerRepository();
+  final StudentRepository _repository = StudentRepository();
+  final AcademicProgramRepository _acadProgramRepository =
+      AcademicProgramRepository();
+  List<StudentView> _students = [];
+  List<StudentView> get students => _students;
 
-  List<StudentView> _studentsView = [];
-  List<StudentView> get students => _studentsView;
-
-  void loadStudents() {
-    final rawStudents = _studentRepo.getAll(); 
-    final careers = _careerRepo.getAll();
-
-    _studentsView = rawStudents.map((student) {
-      final career = careers.firstWhere(
-        (c) => c.id == student.careerId,
-        orElse: () => throw Exception("Carrera no encontrada"),
+  /// ============================
+  /// INIT
+  /// ============================
+  Future<void> loadStudents() async {
+    final students = await _repository.getAll();
+    final careers = await _acadProgramRepository.getAll();
+    _students = students.map((student) {
+      final academicProgram = careers.firstWhere(
+        (c) => c.id == student.academicProgramId,
+        orElse: () => throw Exception('Academic Program not found'),
       );
-      
-      return StudentView(
-        student: student,
-        career: career,
-      );
+      return StudentView(student: student, academicProgram: academicProgram);
     }).toList();
-
-    notifyListeners(); 
+    notifyListeners();
   }
 
-  void addStudent(Student student) {
-    _studentRepo.add(student);
-    loadStudents();
+  /// ============================
+  /// CREATE
+  /// ============================
+  Future<void> addStudent(Student student) async {
+    await _repository.add(student);
+    await loadStudents();
   }
 
-  void updateStudent(Student student) {
-    _studentRepo.update(student);
-    loadStudents();
+  /// ============================
+  /// UPDATE
+  /// ============================
+  Future<void> updateStudent(Student student) async {
+    await _repository.update(student);
+    await loadStudents();
   }
 
-  void deleteStudent(int id) {
-    _studentRepo.delete(id);
-    loadStudents();
+  /// ============================
+  /// DELETE
+  /// ============================
+  Future<void> deleteStudent(int id) async {
+    await _repository.delete(id);
+    await loadStudents();
   }
 
-  Student? getById(int id) => _studentRepo.getById(id);
+  /// ============================
+  /// GET BY ID
+  /// ============================
+  Future<Student?> getById(int id) async {
+    return await _repository.getById(id);
+  }
 }

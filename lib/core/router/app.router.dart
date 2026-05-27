@@ -96,7 +96,7 @@ final GoRouter appRouter = GoRouter(
       path: '/students/form',
       builder: (context, state) {
         final student = state.extra as Student?;
-        return StudentsFormPages(student: student);
+        return StudentsFormPage(student: student);
       },
     ),
     GoRoute(
