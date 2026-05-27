@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/solicitud.model.dart';
-import '../repositories/solicitud.repository.dart';
+import '../models/document.model.dart';
+import '../repositories/document.repository.dart';
 
 class DocumentProvider extends ChangeNotifier {
   

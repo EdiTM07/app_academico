@@ -1,4 +1,4 @@
-import '../models/solicitud.model.dart'; // Asegúrate de ajustar la ruta al modelo AppDocument
+import '../models/document.model.dart'; // Asegúrate de ajustar la ruta al modelo AppDocument
 
 class DocumentRepository {
   final List<AppDocument> _documents = [

@@ -18,7 +18,7 @@ class AppShellWidget extends StatelessWidget {
 
       case '/materias':
         return 2;
-      case '/solicitudes':
+      case '/documents':
         return 4;
       case '/profile':
         return 4;
@@ -52,7 +52,7 @@ class AppShellWidget extends StatelessWidget {
               context.push('/materias');
               break;
             case 3:
-              context.push('/solicitudes');
+              context.push('/documents');
               break;
             case 4:
               context.go('/profile');

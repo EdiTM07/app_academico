@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/solicitud.model.dart';
-import '../providers/solicitud.provider.dart';
+import '../models/document.model.dart';
+import '../providers/document.provider.dart';
 
-class SolicitudDetailPage extends StatelessWidget {
+class DocumentDetailPage extends StatelessWidget {
   final String id;
 
-  const SolicitudDetailPage({super.key, required this.id});
+  const DocumentDetailPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +47,7 @@ class SolicitudDetailPage extends StatelessWidget {
     // Estado: Documento encontrado
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          doc.documentNumber,
-        ),
+        title: Text(doc.documentNumber),
         centerTitle: true,
         elevation: 0,
       ),

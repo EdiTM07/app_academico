@@ -43,7 +43,7 @@ class MateriasPage extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final materia = materias[index];
-        return _MateriaCard(materia: materia);
+        return _MateriaCard(materia: materia.subject);
       },
     );
   }
@@ -63,7 +63,6 @@ class _MateriaCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          
           context.push('/materias/${materia.id}');
         },
         child: Column(

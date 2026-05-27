@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/solicitud.model.dart';
-import '../providers/solicitud.provider.dart';
+import '../models/document.model.dart';
+import '../providers/document.provider.dart';
 
-class SolicitudFormPage extends StatefulWidget {
+class DocumentFormPage extends StatefulWidget {
   final AppDocument? document;
 
-  const SolicitudFormPage({super.key, this.document});
+  const DocumentFormPage({super.key, this.document});
 
   @override
-  _SolicitudFormPageState createState() => _SolicitudFormPageState();
+  _DocumentFormPageState createState() => _DocumentFormPageState();
 }
 
-class _SolicitudFormPageState extends State<SolicitudFormPage> {
+class _DocumentFormPageState extends State<DocumentFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Controladores tardíos (late final) tal como tu ejemplo de estudiantes

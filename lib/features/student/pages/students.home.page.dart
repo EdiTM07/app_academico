@@ -19,7 +19,7 @@ class StudentsHomePage extends StatelessWidget {
           if (result == true && context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Estudiante creado correctamente')),
-            );
+            ); 
           }
         },
         child: const Icon(Icons.add),

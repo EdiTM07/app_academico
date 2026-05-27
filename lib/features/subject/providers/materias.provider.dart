@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
+
 import '../models/materias.model.dart';
+import '../models/materias.view.dart';
 import '../repositories/materias.repository.dart';
 
-
 class SubjectProvider extends ChangeNotifier {
-  
   final SubjectRepository _repository = SubjectRepository();
 
-  List<Subject> _subjects = [];
+  List<SubjectView> _subjects = [];
 
-  List<Subject> get subjects => _subjects;
+  List<SubjectView> get subjects => _subjects;
 
   /// INIT
-  void loadSubjects() {
-    _subjects = _repository.getAll();
+  Future<void> loadSubjects() async {
+    final subjects = await _repository.getAll();
+    _subjects = subjects.map((subject) => SubjectView(subject: subject)).toList();
     notifyListeners();
   }
 
   /// CREATE
-  void addSubject(Subject subject) {
-    _repository.add(subject);
-    loadSubjects();
+  Future<void> addSubject(Subject subject) async {
+    await _repository.add(subject);
+    await loadSubjects();
   }
 
   /// UPDATE
-  void updateSubject(Subject subject) {
-    _repository.update(subject);
-    loadSubjects();
+  Future<void> updateSubject(Subject subject) async {
+    await _repository.update(subject);
+    await loadSubjects();
   }
 
   /// DELETE
-  void deleteSubject(int id) {
-    try {
-
-      _repository.delete(id);
-      loadSubjects();
-    } catch (e) {
-      debugPrint('Error al eliminar: Verifica que la materia no tenga claves foráneas en otras tablas. Detalle: $e');
-      rethrow; 
-    }
+  Future<void> deleteSubject(int id) async {
+    await _repository.delete(id);
+    await loadSubjects();
   }
 
   /// GET BY ID
-  Subject? getById(int id) {
-    return _repository.getById(id);
+  Future<Subject?> getById(int id) async {
+    return await _repository.getById(id);
   }
 }

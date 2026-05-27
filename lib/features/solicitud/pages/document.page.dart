@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../models/solicitud.model.dart';
-import '../providers/solicitud.provider.dart';
+import '../models/document.model.dart';
+import '../providers/document.provider.dart';
 
-class SolicitudesPage extends StatelessWidget {
-  const SolicitudesPage({super.key});
+class DocumentPage extends StatelessWidget {
+  const DocumentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _DocumentCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.push('/solicitudes/${document.id}');
+        context.push('/documents/${document.id}');
       },
       child: Card(
         elevation: 4,

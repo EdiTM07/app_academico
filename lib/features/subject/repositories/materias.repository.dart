@@ -1,61 +1,73 @@
-import '../models/materias.model.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/materias.model.dart';
 
 class SubjectRepository {
-  final List<Subject> _subjects = [
-    Subject(
-      id: 1,
-      code: "MAT001",
-      name: "Bases de Datos",
-      credits: 4,
-      hours: 64,
-      knowledgeArea: "Ingeniería de Software",
-    ),
-    Subject(
-      id: 2,
-      code: "MAT002",
-      name: "Desarrollo Web Frontend",
-      credits: 3,
-      hours: 48,
-      knowledgeArea: "Programación",
-    ),
-    Subject(
-      id: 3,
-      code: "MAT003",
-      name: "Metodologías Ágiles",
-      credits: 3,
-      hours: 48,
-      knowledgeArea: "Gestión de Proyectos",
-    ),
-  ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String _collection = 'subjects';
 
+  /// ============================
   /// GET ALL
-  List<Subject> getAll() {
-    return _subjects;
+  /// ============================
+  Future<List<Subject>> getAll() async {
+    final snapshot = await _firestore.collection(_collection).get();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return Subject.fromJson(data);
+    }).toList();
   }
 
+  /// ============================
   /// GET BY ID
-  Subject? getById(int id) {
-    return _subjects.firstWhere(
-      (s) => s.id == id,
-      orElse: () => throw Exception("Materia no encontrada"),
-    );
-  }
-
-  /// INSERT
-  void add(Subject subject) {
-    _subjects.add(subject);
-  }
-
-  /// UPDATE
-  void update(Subject subject) {
-    final index = _subjects.indexWhere((s) => s.id == subject.id);
-    if (index != -1) {
-      _subjects[index] = subject;
+  /// ============================
+  Future<Subject?> getById(int id) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return null;
     }
+    final data = snapshot.docs.first.data();
+    return Subject.fromJson(data);
   }
 
+  /// ============================
+  /// INSERT
+  /// ============================
+  Future<void> add(Subject subject) async {
+    await _firestore.collection(_collection).add(subject.toJson());
+  }
+
+  /// ============================
+  /// UPDATE
+  /// ============================
+  Future<void> update(Subject subject) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: subject.id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      throw Exception('Subject not found');
+    }
+    final docId = snapshot.docs.first.id;
+    await _firestore
+        .collection(_collection)
+        .doc(docId)
+        .update(subject.toJson());
+  }
+
+  /// ============================
   /// DELETE
-  void delete(int id) {
-    _subjects.removeWhere((s) => s.id == id);
+  /// ============================
+  Future<void> delete(int id) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('id', isEqualTo: id)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return;
+    }
+    final docId = snapshot.docs.first.id;
+    await _firestore.collection(_collection).doc(docId).delete();
   }
 }

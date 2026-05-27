@@ -4,12 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../../features/auth/pages/login.page.dart';
 import '../../features/auth/providers/auth.provider.dart';
-import '../../features/solicitud/pages/solicitud.form.page.dart';
-import '../../features/solicitud/pages/solicitud.home.page.dart';
-import '../../features/solicitud/pages/solicitud.detail.page.dart';
+import '../../features/solicitud/pages/document.form.page.dart';
+import '../../features/solicitud/pages/document.home.page.dart';
+import '../../features/solicitud/pages/document.detail.page.dart';
 import '../../features/student/models/student.model.dart';
 import '../../features/student/pages/students.form.page.dart';
 import '../../features/student/pages/students.home.page.dart';
+import '../../features/subject/pages/materias.form.page.dart';
 import '../../features/subject/pages/materias.home.page.dart';
 import '../../features/welcome/welcome.page.dart';
 import '../../pages/chat.signature.page.dart';
@@ -115,6 +116,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const MateriasHomePage(),
     ),
     GoRoute(
+      path: '/materias/form',
+      builder: (context, state) => const MateriasFormPage(),
+    ),
+    GoRoute(
       path: '/materias/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
@@ -126,18 +131,18 @@ final GoRouter appRouter = GoRouter(
     /// RUTAS DE SOLICITUDES / DOCUMENTOS
     /// ==========================================
     GoRoute(
-      path: '/solicitudes',
-      builder: (context, state) => const SolicitudHomePage(),
+      path: '/documents',
+      builder: (context, state) => const DocumentHomePage(),
     ),
     GoRoute(
-      path: '/solicitudes/form',
-      builder: (context, state) => const SolicitudFormPage(),
+      path: '/documents/form',
+      builder: (context, state) => const DocumentFormPage(),
     ),
     GoRoute(
-      path: '/solicitudes/:id',
+      path: '/documents/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return SolicitudDetailPage(id: id);
+        return DocumentDetailPage(id: id);
       },
     ),
 

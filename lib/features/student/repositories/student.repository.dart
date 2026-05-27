@@ -12,7 +12,7 @@ class StudentRepository {
     final snapshot = await _firestore.collection(_collection).get();
     return snapshot.docs.map((doc) {
       final data = doc.data();
-      return Student.fromJson({
+      return Student.fromJson({ 
         ...data,
         /// Convertir timestamp a string
         'birthDate': (data['birthDate'] as Timestamp)

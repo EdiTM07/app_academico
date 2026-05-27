@@ -36,6 +36,8 @@ class _MateriasFormPageState extends State<MateriasFormPage> {
     _creditsCtrl = TextEditingController(text: s?.credits.toString() ?? '');
     _hoursCtrl = TextEditingController(text: s?.hours.toString() ?? '');
     _areaCtrl = TextEditingController(text: s?.knowledgeArea ?? '');
+    _careerCtrl = TextEditingController();
+    _levelCtrl = TextEditingController();
   }
 
   @override

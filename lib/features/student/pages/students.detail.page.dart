@@ -7,7 +7,7 @@ import '../../academic_programs/providers/academic.program.provider.dart';
 import '../models/student.model.dart';
 import '../providers/student.provider.dart';
 
-class StudentDetailPage extends StatelessWidget {
+class StudentDetailPage extends StatelessWidget { 
   final String id;
   const StudentDetailPage({super.key, required this.id});
 

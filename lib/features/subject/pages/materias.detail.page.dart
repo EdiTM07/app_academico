@@ -10,27 +10,34 @@ class MateriasDetailPage extends StatelessWidget {
 
   const MateriasDetailPage({super.key, required this.id});
 
-  @override
+  @override 
   Widget build(BuildContext context) {
-    // 1. Escuchar el Provider
-    final provider = context.watch<SubjectProvider>();
-
-    // 2. Convertir el ID de String a int
+    final provider = context.read<SubjectProvider>(); // watch -> read
     final subjectId = int.tryParse(id);
+    
+    if (subjectId == null) {
+      return const Scaffold(body: Center(child: Text('ID inválido')));
+    }
 
-    // 3. Buscar la materia en el repositorio
-    final Subject? subject = subjectId != null
-        ? provider.getById(subjectId)
-        : null;
+    return FutureBuilder<Subject?>(
+      future: provider.getById(subjectId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    // Estado: Materia no encontrada
-    if (subject == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Detalle de la Materia'),
-          centerTitle: true,
-        ),
-        body: Center(
+        final subject = snapshot.data;
+
+        // Estado: Materia no encontrada
+        if (subject == null) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Detalle de la Materia'),
+              centerTitle: true,
+            ),
+            body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -122,6 +129,7 @@ class MateriasDetailPage extends StatelessWidget {
         ),
       ),
     );
+    });
   }
 
   // Widget para la cabecera
