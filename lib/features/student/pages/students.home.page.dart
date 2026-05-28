@@ -8,7 +8,24 @@ class StudentsHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Estudiantes')),
+      appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 4,
+        centerTitle: false,
+        title: Row(
+          children: [
+            const SizedBox(width: 12),
+            const Text(
+              'Estudiantes',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: StudentsPage(),
@@ -19,7 +36,7 @@ class StudentsHomePage extends StatelessWidget {
           if (result == true && context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Estudiante creado correctamente')),
-            ); 
+            );
           }
         },
         child: const Icon(Icons.add),

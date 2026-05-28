@@ -30,7 +30,44 @@ class AppShellWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mini Universidad'), centerTitle: false),
+      appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 4,
+        centerTitle: false,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.account_balance_rounded,
+                color: Theme.of(context).colorScheme.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Mini Universidad',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          // Botón decorativo de notificaciones (le da un toque más premium)
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {},
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
 
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),

@@ -3,50 +3,59 @@ import '../models/document.model.dart';
 import '../repositories/document.repository.dart';
 
 class DocumentProvider extends ChangeNotifier {
-  
   final DocumentRepository _repository = DocumentRepository();
-
   List<AppDocument> _documents = [];
-
   List<AppDocument> get documents => _documents;
-
-  /// INIT - Carga todos los documentos/solicitudes del sistema
-  void loadDocuments() {
-    _documents = _repository.getAll();
+  
+  /// =====================
+  /// INIT
+  /// =====================
+  Future<void> loadDocuments() async {
+    _documents = await _repository.getAll();
     notifyListeners();
   }
-
-  /// CREATE - Registra una nueva solicitud u oficio
-  void addDocument(AppDocument document) {
-    _repository.add(document);
-    loadDocuments(); // Recarga la lista y notifica a la UI automáticamente
+  
+  /// =====================
+  /// CREATE
+  /// =====================
+  Future<void> addDocument(AppDocument document) async {
+    await _repository.add(document);
+    await loadDocuments();
   }
-
-  /// UPDATE - Permite editar el documento (Ej: cambiar el estado a 'Aprobado' o 'Rechazado')
-  void updateDocument(AppDocument document) {
-    _repository.update(document);
-    loadDocuments();
+  
+  /// =====================
+  /// UPDATE
+  /// =====================
+  Future<void> updateDocument(AppDocument document) async {
+    await _repository.update(document);
+    await loadDocuments();
   }
-
-  /// DELETE - Elimina un documento del sistema por su ID
-  void deleteDocument(int id) {
-    _repository.delete(id);
-    loadDocuments();
+  
+  /// =====================
+  /// DELETE
+  /// =====================
+  Future<void> deleteDocument(int id) async {
+    await _repository.delete(id);
+    await loadDocuments();
   }
-
-  /// GET BY ID - Obtiene una solicitud específica por su llave primaria
-  AppDocument? getById(int id) {
-    return _repository.getById(id);
+  
+  /// =====================
+  /// GET BY ID
+  /// =====================
+  Future<AppDocument?> getById(int id) async {
+    return await _repository.getById(id);
   }
-
-  /// HELPER: Filtrar solicitudes por Estudiante
-  /// Útil para el historial dentro del perfil del estudiante
+  
+  /// =====================
+  /// FILTER BY STUDENT
+  /// =====================
   List<AppDocument> getDocumentsByStudent(int studentId) {
     return _documents.where((doc) => doc.studentId == studentId).toList();
   }
-
-  /// HELPER: Filtrar solicitudes por Estado (Borrador, Enviado, En revisión, Aprobado)
-  /// Útil para las bandejas de entrada de la Coordinación Académica o Secretaría
+  
+  /// =====================
+  /// FILTER BY STATUS
+  /// =====================
   List<AppDocument> getDocumentsByStatus(String status) {
     return _documents.where((doc) => doc.status.toLowerCase() == status.toLowerCase()).toList();
   }

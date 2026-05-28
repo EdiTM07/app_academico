@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      // Al no definir backgroundColor, usa automáticamente el color de fondo del modo oscuro/claro
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -15,10 +15,10 @@ class HomePage extends StatelessWidget {
             children: [
               _buildHeroSection(context),
               const SizedBox(height: 24),
-              _buildSectionTitle('Accesos Rápidos'),
+              _buildSectionTitle(context, 'Accesos Rápidos'),
               _buildQuickActions(context),
               const SizedBox(height: 24),
-              _buildSectionTitle('Resumen Académico'),
+              _buildSectionTitle(context, 'Resumen Académico'),
               _buildSummarySection(context),
               const SizedBox(height: 40),
             ],
@@ -29,10 +29,13 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildHeroSection(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
+        // El Hero Section se mantiene colorido ya que es una cabecera vibrante
         gradient: LinearGradient(
           colors: [Colors.indigo.shade800, Colors.deepPurple.shade600],
           begin: Alignment.topLeft,
@@ -44,7 +47,7 @@ class HomePage extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.indigo.shade200,
+            color: isDark ? Colors.black38 : Colors.indigo.shade200,
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -99,7 +102,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Text(
@@ -107,7 +110,8 @@ class HomePage extends StatelessWidget {
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Colors.blueGrey.shade900,
+          // Adapta el texto al modo oscuro/claro
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
     );
@@ -152,14 +156,14 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          _SummaryTile(
+          const _SummaryTile(
             title: 'Ciclo Actual',
             subtitle: 'Semestre 2026-A',
             icon: Icons.calendar_month_rounded,
             color: Colors.purple,
           ),
           const SizedBox(height: 12),
-          _SummaryTile(
+          const _SummaryTile(
             title: 'Notificaciones',
             subtitle: 'No tienes alertas pendientes',
             icon: Icons.notifications_active_rounded,
@@ -186,11 +190,15 @@ class _ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Card(
       elevation: 4,
-      shadowColor: color.shade100,
+      shadowColor: isDark ? Colors.transparent : color.shade100,
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      // Usa el color de la tarjeta según el tema
+      color: Theme.of(context).cardColor,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -199,7 +207,10 @@ class _ActionCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
-              colors: [Colors.white, color.shade50.withOpacity(0.5)],
+              // Cambia el degradado interno según el tema
+              colors: isDark
+                  ? [color.withOpacity(0.15), color.withOpacity(0.02)]
+                  : [Colors.white, color.shade50.withOpacity(0.5)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -210,10 +221,15 @@ class _ActionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.shade100,
+                  // Ajusta el color del círculo interno
+                  color: isDark ? color.withOpacity(0.2) : color.shade100,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color.shade700, size: 28),
+                child: Icon(
+                  icon, 
+                  color: isDark ? color.shade300 : color.shade700, 
+                  size: 28,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
@@ -222,7 +238,8 @@ class _ActionCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blueGrey.shade800,
+                  // Texto blanco en oscuro, gris azulado en claro
+                  color: isDark ? Colors.white : Colors.blueGrey.shade800,
                 ),
               ),
             ],
@@ -248,13 +265,15 @@ class _SummaryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200,
+            color: isDark ? Colors.transparent : Colors.grey.shade200,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -265,19 +284,31 @@ class _SummaryTile extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: color.shade50,
+            color: isDark ? color.withOpacity(0.2) : color.shade50,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: color.shade600),
+          child: Icon(
+            icon, 
+            color: isDark ? color.shade300 : color.shade600,
+          ),
         ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(
+            fontWeight: FontWeight.bold, 
+            fontSize: 16,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
-        subtitle: Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+        subtitle: Text(
+          subtitle, 
+          style: TextStyle(
+            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          ),
+        ),
         trailing: Icon(
           Icons.chevron_right_rounded,
-          color: Colors.grey.shade400,
+          color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
         ),
       ),
     );

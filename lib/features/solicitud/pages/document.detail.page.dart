@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/document.model.dart';
 import '../providers/document.provider.dart';
@@ -13,95 +14,113 @@ class DocumentDetailPage extends StatelessWidget {
     final provider = context.watch<DocumentProvider>();
     final documentId = int.tryParse(id);
 
-    final AppDocument? doc = documentId != null
-        ? provider.getById(documentId)
-        : null;
-
-    // Estado: Documento no encontrado
-    if (doc == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Detalle del Documento'),
-          centerTitle: true,
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.assignment_late_outlined,
-                size: 80,
-                color: Colors.grey.shade400,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Documento no encontrado',
-                style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
-              ),
-            ],
-          ),
-        ),
-      );
+    if (documentId == null) {
+      return const Scaffold(body: Center(child: Text('ID Invalido')));
     }
+    return FutureBuilder<AppDocument?>(
+      future: provider.getById(documentId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final document = snapshot.data;
 
-    // Estado: Documento encontrado
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(doc.documentNumber),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(context, doc),
-
-            // Contenido principal
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+        if (document == null) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Detalle de la solicitud'),
+              centerTitle: true,
+            ),
+            body: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Tarjeta con metadatos y enrutamiento administrativo
-                  _buildMetadataCard(context, doc),
-                  const SizedBox(height: 20),
-
-                  // Bloque de lectura del contenido del documento
-                  _buildContentCard(doc),
-                  const SizedBox(height: 30),
-
-                  // Botón para ver archivos adjuntos (si existen)
-                  if (doc.attachmentUrl != null &&
-                      doc.attachmentUrl!.isNotEmpty)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: FilledButton.icon(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.indigo.shade700,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Acción para abrir el archivo o visualizar adjunto
-                        },
-                        icon: const Icon(Icons.picture_as_pdf_outlined),
-                        label: Text(
-                          'Ver Adjunto: ${doc.attachmentUrl}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+                  Icon(Icons.menu_book_outlined, size: 80, color: Colors.blue),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Solicitud no encontrada',
+                    style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Detalle de la solicitud'),
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.deepPurple.shade900,
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Cabecera visual con los datos principales
+                _buildHeader(context, document),
+
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Esta pantalla NO pertenece al ShellRoute.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade500,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Tarjeta con los detalles académicos
+                      _buildInfoCard(context, document),
+
+                      const SizedBox(height: 30),
+
+                      // Botón de Acción Principal (Chat)
+                      SizedBox(
+                        height: 55,
+                        child: FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Navegación original que solicitaste
+                            context.push('/chat-signature');
+                          },
+                          icon: const Icon(
+                            Icons.forum_outlined,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'Abrir Chat de materia',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -198,22 +217,16 @@ class DocumentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMetadataCard(BuildContext context, AppDocument doc) {
-    final createDateStr =
-        "${doc.createdAt.day.toString().padLeft(2, '0')}/${doc.createdAt.month.toString().padLeft(2, '0')}/${doc.createdAt.year}";
-
-    String approvalDateStr = "Pendiente de firma";
-    if (doc.approvalDate != null) {
-      approvalDateStr =
-          "${doc.approvalDate!.day.toString().padLeft(2, '0')}/${doc.approvalDate!.month.toString().padLeft(2, '0')}/${doc.approvalDate!.year}";
-    }
-
+  Widget _buildInfoCard(BuildContext context, AppDocument doc) {
     return Card(
-      elevation: 2,
+      elevation: 3,
       shadowColor: Colors.black12,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         child: Column(
           children: [
             _InfoTile(
@@ -238,60 +251,6 @@ class DocumentDetailPage extends StatelessWidget {
               icon: Icons.outlined_flag,
               label: "Prioridad",
               value: doc.priority,
-            ),
-            const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
-              icon: Icons.calendar_today_outlined,
-              label: "Fecha de Creación",
-              value: createDateStr,
-            ),
-            const Divider(height: 1, indent: 50, endIndent: 16),
-            _InfoTile(
-              icon: Icons.draw_outlined,
-              label: "Fecha de Firma / Aprobación",
-              value: approvalDateStr,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContentCard(AppDocument doc) {
-    return Card(
-      elevation: 1,
-      color: Colors.grey.shade50,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.article_outlined, size: 20, color: Colors.black54),
-                SizedBox(width: 8),
-                Text(
-                  "Contenido del Documento",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              doc.content,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.black87,
-                height: 1.5,
-              ),
             ),
           ],
         ),
