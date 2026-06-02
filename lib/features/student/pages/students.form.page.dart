@@ -81,7 +81,7 @@ class _StudentsFormPageState extends State<StudentsFormPage> {
     }
     final provider = context.read<StudentProvider>();
     final student = Student(
-      id: widget.student?.id ?? 0,
+      id: widget.student?.id,
       code: _codeCtrl.text.trim(),
       firstName: _firstNameCtrl.text.trim(),
       lastName: _lastNameCtrl.text.trim(),

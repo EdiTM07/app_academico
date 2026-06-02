@@ -12,32 +12,28 @@ class StudentRepository {
     final snapshot = await _firestore.collection(_collection).get();
     return snapshot.docs.map((doc) {
       final data = doc.data();
-      return Student.fromJson({ 
+      return Student.fromJson({
         ...data,
+
         /// Convertir timestamp a string
         'birthDate': (data['birthDate'] as Timestamp)
             .toDate()
             .toIso8601String(),
-      });
+      }, id: doc.id);
     }).toList();
   }
 
   /// ============================
   /// GET BY ID
   /// ============================
-  Future<Student?> getById(int id) async {
-    final snapshot = await _firestore
-        .collection(_collection)
-        .where('id', isEqualTo: id)
-        .get();
-    if (snapshot.docs.isEmpty) {
-      return null;
-    }
-    final data = snapshot.docs.first.data();
+  Future<Student?> getById(String id) async {
+    final doc = await _firestore.collection(_collection).doc(id).get();
+    if (!doc.exists) return null;
+    final data = doc.data()!;
     return Student.fromJson({
       ...data,
       'birthDate': (data['birthDate'] as Timestamp).toDate().toIso8601String(),
-    });
+    }, id: doc.id);
   }
 
   /// ============================
@@ -54,15 +50,7 @@ class StudentRepository {
   /// UPDATE
   /// ============================
   Future<void> update(Student student) async {
-    final snapshot = await _firestore
-        .collection(_collection)
-        .where('id', isEqualTo: student.id)
-        .get();
-    if (snapshot.docs.isEmpty) {
-      throw Exception('Student not found');
-    }
-    final docId = snapshot.docs.first.id;
-    await _firestore.collection(_collection).doc(docId).update({
+    await _firestore.collection(_collection).doc(student.id).update({
       ...student.toJson(),
       'birthDate': Timestamp.fromDate(student.birthDate),
     });
@@ -71,15 +59,7 @@ class StudentRepository {
   /// ============================
   /// DELETE
   /// ============================
-  Future<void> delete(int id) async {
-    final snapshot = await _firestore
-        .collection(_collection)
-        .where('id', isEqualTo: id)
-        .get();
-    if (snapshot.docs.isEmpty) {
-      return;
-    }
-    final docId = snapshot.docs.first.id;
-    await _firestore.collection(_collection).doc(docId).delete();
+  Future<void> delete(String id) async {
+    await _firestore.collection(_collection).doc(id).delete();
   }
 }

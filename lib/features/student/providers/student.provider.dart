@@ -46,7 +46,7 @@ class StudentProvider extends ChangeNotifier {
   /// ============================
   /// DELETE
   /// ============================
-  Future<void> deleteStudent(int id) async {
+  Future<void> deleteStudent(String id) async {
     await _repository.delete(id);
     await loadStudents();
   }
@@ -54,7 +54,7 @@ class StudentProvider extends ChangeNotifier {
   /// ============================
   /// GET BY ID
   /// ============================
-  Future<Student?> getById(int id) async {
+  Future<Student?> getById(String id) async {
     return await _repository.getById(id);
   }
 }

@@ -7,7 +7,7 @@ import '../../academic_programs/providers/academic.program.provider.dart';
 import '../models/student.model.dart';
 import '../providers/student.provider.dart';
 
-class StudentDetailPage extends StatelessWidget { 
+class StudentDetailPage extends StatelessWidget {
   final String id;
   const StudentDetailPage({super.key, required this.id});
 
@@ -15,12 +15,11 @@ class StudentDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.read<StudentProvider>();
     final providerAcademic = context.read<AcademicProgramProvider>();
-    final studentId = int.tryParse(id);
-    if (studentId == null) {
+    if (id.isEmpty) {
       return const Scaffold(body: Center(child: Text('ID inválido')));
     }
     return FutureBuilder<Student?>(
-      future: provider.getById(studentId),
+      future: provider.getById(id),
       builder: (context, studentSnapshot) {
         /// LOADING
         if (studentSnapshot.connectionState == ConnectionState.waiting) {

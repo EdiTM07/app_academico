@@ -40,7 +40,7 @@ class StudentsPage extends StatelessWidget {
 
 class _StudentCard extends StatelessWidget {
   final String nombre;
-  final int id;
+  final String? id;
 
   const _StudentCard({required this.nombre, required this.id});
 

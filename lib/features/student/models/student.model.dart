@@ -24,7 +24,7 @@ class StudentResponse {
 }
 
 class Student {
-  int id;
+  String? id;
   String code;
   String firstName;
   String lastName;
@@ -48,8 +48,8 @@ class Student {
     required this.academicProgramId,
   });
 
-  factory Student.fromJson(Map<String, dynamic> json) => Student(
-    id: json["id"],
+  factory Student.fromJson(Map<String, dynamic> json, {String? id}) => Student(
+    id: id,
     code: json["code"],
     firstName: json["firstName"],
     lastName: json["lastName"],
