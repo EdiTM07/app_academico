@@ -1,47 +1,141 @@
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
-import '../models/auth_user.model.dart';
+
+import '../../user/models/user.model.dart';
+import '../../user/providers/user.provider.dart';
+import '../../user/repositories/user.repository.dart';
 import '../repositories/auth.repository.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final AuthRepository _repository = AuthRepository();
+  final AuthRepository _authRepository = AuthRepository();
 
-  AuthUser? _currentUser;
+  final UserRepository _userRepository = UserRepository();
+
+  final UserProvider userProvider;
+
+  AuthProvider({required this.userProvider});
+
   bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  bool _isAuthenticated = false;
+
+  bool get isAuthenticated => _isAuthenticated;
+
   String? _errorMessage;
 
-  AuthUser? get currentUser => _currentUser;
-  bool get isAuthenticated => _currentUser != null;
-  bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  /// Intenta autenticar al usuario con email y password.
-  Future<bool> login(String email, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
+  /// ============================
+  /// INIT SESSION
+  /// ============================
+   Future<void> initAuth() async {
+    final firebaseUser = _authRepository.currentUser;
+
+    if (firebaseUser == null) {
+      _isAuthenticated = false;
+
+      userProvider.clearCurrentUser();
+
+      notifyListeners();
+
+      return;
+    }
+
+    await userProvider.loadUserById(firebaseUser.uid);
+
+    if (userProvider.currentUser == null) {
+      _isAuthenticated = false;
+
+      return;
+    }
+
+    _isAuthenticated = true;
+
     notifyListeners();
+  }
 
-    // Simulamos una pequeña espera como si fuera una llamada a API
-    await Future.delayed(const Duration(milliseconds: 800));
+  /// ============================
+  /// LOGIN
+  /// ============================
+Future<void> login(String email, String password) async {
+    _setLoading(true);
 
-    final user = _repository.login(email, password);
+    try {
+      final credential = await _authRepository.login(email, password);
 
-    if (user != null) {
-      _currentUser = user;
-      _isLoading = false;
+      final firebaseUser = credential.user;
+
+      if (firebaseUser == null) {
+        throw Exception('Usuario inválido');
+      }
+
+      // Intentamos cargar los datos del perfil desde Firestore (opcional)
+      await userProvider.loadUserById(firebaseUser.uid);
+
+      _isAuthenticated = true;
+      _errorMessage = null;
       notifyListeners();
-      return true;
-    } else {
-      _errorMessage = 'Correo o contraseña incorrectos.';
-      _isLoading = false;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = e.message;
       notifyListeners();
-      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _setLoading(false);
     }
   }
 
-  /// Cierra la sesión del usuario actual.
-  void logout() {
-    _currentUser = null;
-    _errorMessage = null;
+  /// ============================
+  /// REGISTER
+  /// ============================
+  Future<void> register(User user, String password) async {
+    _setLoading(true);
+
+    try {
+      final credential = await _authRepository.register(user.email, password);
+
+      final uid = credential.user!.uid;
+
+      final newUser = user.copyWith(id: uid);
+
+      await _userRepository.create(newUser);
+
+      await userProvider.loadUserById(uid);
+
+      _isAuthenticated = true;
+
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
+
+      rethrow;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// ============================
+  /// LOGOUT
+  /// ============================
+  Future<void> logout() async {
+    await _authRepository.logout();
+
+    userProvider.clearCurrentUser();
+
+    _isAuthenticated = false;
+
+    notifyListeners();
+  }
+
+  /// ============================
+  /// LOADING
+  /// ============================
+  void _setLoading(bool value) {
+    _isLoading = value;
+
     notifyListeners();
   }
 }

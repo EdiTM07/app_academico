@@ -1,25 +1,43 @@
-import '../models/auth_user.model.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 
 class AuthRepository {
-  // Credenciales de prueba en memoria
-  static const List<Map<String, String>> _users = [
-    {'email': 'admin@uni.edu', 'password': '123456', 'name': 'Administrador'},
-    {'email': 'docente@uni.edu', 'password': 'docente1', 'name': 'Docente'},
-  ];
+  final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
 
-  /// Retorna el usuario si las credenciales son correctas, null si no.
-  AuthUser? login(String email, String password) {
-    try {
-      final found = _users.firstWhere(
-        (u) => u['email'] == email.trim() && u['password'] == password,
-      );
-      return AuthUser(
-        email: found['email']!,
-        password: found['password']!,
-        name: found['name']!,
-      );
-    } catch (_) {
-      return null;
-    }
+  /// ============================
+  /// CURRENT USER
+  /// ============================
+  fb.User? get currentUser => _auth.currentUser;
+
+  /// ============================
+  /// LOGIN
+  /// ============================
+  Future<fb.UserCredential> login(
+    String email,
+    String password,
+  ) async {
+    return await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  /// ============================
+  /// REGISTER
+  /// ============================
+  Future<fb.UserCredential> register(
+    String email,
+    String password,
+  ) async {
+    return await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  /// ============================
+  /// LOGOUT
+  /// ============================
+  Future<void> logout() async {
+    await _auth.signOut();
   }
 }

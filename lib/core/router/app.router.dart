@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-
 import '../../features/auth/pages/login.page.dart';
 import '../../features/auth/providers/auth.provider.dart';
 import '../../features/solicitud/pages/document.form.page.dart';
@@ -21,138 +19,140 @@ import '../../pages/profile.page.dart';
 import '../../features/student/pages/students.detail.page.dart';
 import '../../app/app.shell.widget.dart';
 
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
-
-  /// ==========================================
-  /// GUARD DE AUTENTICACIÓN
-  /// ==========================================
-  redirect: (BuildContext context, GoRouterState state) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-    final isAuth = auth.isAuthenticated;
-    final location = state.matchedLocation;
-
-    // Rutas públicas que no requieren login
-    final publicRoutes = ['/', '/login'];
-    final isPublic = publicRoutes.contains(location);
-
-    // Si no está autenticado y quiere entrar a una ruta protegida → login
-    if (!isAuth && !isPublic) return '/login';
-
-    // Si ya está autenticado y va al login → home
-    if (isAuth && location == '/login') return '/home';
-
-    return null; // Sin redirección
-  },
-
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) {
-        return AppShellWidget(child: child);
-      },
-      routes: [
-        GoRoute(
-          path: '/home',
-          builder: (context, state) {
-            return const HomePage();
-          },
-        ),
-        GoRoute(
-          path: '/profile',
-          builder: (context, state) {
-            return const ProfilePage();
-          },
-        ),
-      ],
-    ),
+GoRouter createRouter(AuthProvider authProvider) {
+  return GoRouter(
+    initialLocation: '/',
+    refreshListenable: authProvider,
 
     /// ==========================================
-    /// RUTA Welcome (Splash)
+    /// GUARD DE AUTENTICACIÓN
     /// ==========================================
-    GoRoute(
-      path: '/',
-      builder: (context, state) {
-        return const WelcomePage();
-      },
-    ),
+    redirect: (BuildContext context, GoRouterState state) {
+      final isAuth = authProvider.isAuthenticated;
+      final location = state.matchedLocation;
 
-    /// ==========================================
-    /// RUTA LOGIN
-    /// ==========================================
-    GoRoute(
-      path: '/login',
-      builder: (context, state) {
-        return const LoginPage();
-      },
-    ),
+      // Rutas públicas que no requieren login
+      final publicRoutes = ['/', '/login'];
+      final isPublic = publicRoutes.contains(location);
 
-    /// ==========================================
-    /// RUTAS DE ESTUDIANTES
-    /// ==========================================
-    GoRoute(
-      path: '/students',
-      builder: (context, state) => const StudentsHomePage(),
-    ),
-    GoRoute(
-      path: '/students/form',
-      builder: (context, state) {
-        final student = state.extra as Student?;
-        return StudentsFormPage(student: student);
-      },
-    ),
-    GoRoute(
-      path: '/student/:id',
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return StudentDetailPage(id: id);
-      },
-    ),
+      // Si no está autenticado y quiere entrar a una ruta protegida → login
+      if (!isAuth && !isPublic) return '/login';
 
-    /// ==========================================
-    /// RUTAS DE MATERIAS
-    /// ==========================================
-    GoRoute(
-      path: '/materias',
-      builder: (context, state) => const MateriasHomePage(),
-    ),
-    GoRoute(
-      path: '/materias/form',
-      builder: (context, state) => const MateriasFormPage(),
-    ),
-    GoRoute(
-      path: '/materias/:id',
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return MateriasDetailPage(id: id);
-      },
-    ),
+      // Si ya está autenticado y va al login → home
+      if (isAuth && location == '/login') return '/home';
 
-    /// ==========================================
-    /// RUTAS DE SOLICITUDES / DOCUMENTOS
-    /// ==========================================
-    GoRoute(
-      path: '/documents',
-      builder: (context, state) => const DocumentHomePage(),
-    ),
-    GoRoute(
-      path: '/documents/form',
-      builder: (context, state) => const DocumentFormPage(),
-    ),
-    GoRoute(
-      path: '/documents/:id',
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return DocumentDetailPage(id: id);
-      },
-    ),
+      return null; // Sin redirección
+    },
 
-    /// ==========================================
-    /// RUTAS DE CHAT Y EXTRAS
-    /// ==========================================
-    GoRoute(path: '/chat', builder: (context, state) => const ChatPage()),
-    GoRoute(
-      path: '/chat-signature',
-      builder: (context, state) => const ChatSignaturePage(),
-    ),
-  ],
-);
+    routes: [
+      ShellRoute(
+        builder: (context, state, child) {
+          return AppShellWidget(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) {
+              return const HomePage();
+            },
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) {
+              return const ProfilePage();
+            },
+          ),
+        ],
+      ),
+
+      /// ==========================================
+      /// RUTA Welcome (Splash)
+      /// ==========================================
+      GoRoute(
+        path: '/',
+        builder: (context, state) {
+          return const WelcomePage();
+        },
+      ),
+
+      /// ==========================================
+      /// RUTA LOGIN
+      /// ==========================================
+      GoRoute(
+        path: '/login',
+        builder: (context, state) {
+          return const LoginPage();
+        },
+      ),
+
+      /// ==========================================
+      /// RUTAS DE ESTUDIANTES
+      /// ==========================================
+      GoRoute(
+        path: '/students',
+        builder: (context, state) => const StudentsHomePage(),
+      ),
+      GoRoute(
+        path: '/students/form',
+        builder: (context, state) {
+          final student = state.extra as Student?;
+          return StudentsFormPage(student: student);
+        },
+      ),
+      GoRoute(
+        path: '/student/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return StudentDetailPage(id: id);
+        },
+      ),
+
+      /// ==========================================
+      /// RUTAS DE MATERIAS
+      /// ==========================================
+      GoRoute(
+        path: '/materias',
+        builder: (context, state) => const MateriasHomePage(),
+      ),
+      GoRoute(
+        path: '/materias/form',
+        builder: (context, state) => const MateriasFormPage(),
+      ),
+      GoRoute(
+        path: '/materias/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return MateriasDetailPage(id: id);
+        },
+      ),
+
+      /// ==========================================
+      /// RUTAS DE SOLICITUDES / DOCUMENTOS
+      /// ==========================================
+      GoRoute(
+        path: '/documents',
+        builder: (context, state) => const DocumentHomePage(),
+      ),
+      GoRoute(
+        path: '/documents/form',
+        builder: (context, state) => const DocumentFormPage(),
+      ),
+      GoRoute(
+        path: '/documents/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return DocumentDetailPage(id: id);
+        },
+      ),
+
+      /// ==========================================
+      /// RUTAS DE CHAT Y EXTRAS
+      /// ==========================================
+      GoRoute(path: '/chat', builder: (context, state) => const ChatPage()),
+      GoRoute(
+        path: '/chat-signature',
+        builder: (context, state) => const ChatSignaturePage(),
+      ),
+    ],
+  );
+}

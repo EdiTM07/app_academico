@@ -51,15 +51,18 @@ class _LoginPageState extends State<LoginPage>
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final auth = context.read<AuthProvider>();
-    final success = await auth.login(
+
+    await auth.login(
       _emailController.text,
       _passwordController.text,
     );
 
     if (!mounted) return;
-    if (success) {
+
+    if (auth.isAuthenticated) {
       context.go('/home');
     }
+    // Si no está autenticado, el Consumer de errorMessage mostrará el error
   }
 
   @override
