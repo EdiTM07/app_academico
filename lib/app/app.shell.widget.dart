@@ -1,5 +1,7 @@
+import 'package:app_academico/features/auth/providers/auth.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class AppShellWidget extends StatelessWidget {
   final Widget child;
@@ -60,10 +62,13 @@ class AppShellWidget extends StatelessWidget {
           ],
         ),
         actions: [
-          // Botón decorativo de notificaciones (le da un toque más premium)
+          // Botón cerrar sesion
           IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+            icon: const Icon(Icons.logout),
+            color: Colors.orange,
+            onPressed: () async {
+              await context.read<AuthProvider>().logout();
+            },
           ),
           const SizedBox(width: 8),
         ],

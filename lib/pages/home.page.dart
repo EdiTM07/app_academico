@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../features/user/providers/user.provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserProvider>().currentUser;
     return Scaffold(
       // Al no definir backgroundColor, usa automáticamente el color de fondo del modo oscuro/claro
       body: SafeArea(
@@ -13,7 +17,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeroSection(context),
+              _buildHeroSection(context, user?.firstName ?? 'Usuario'),
               const SizedBox(height: 24),
               _buildSectionTitle(context, 'Accesos Rápidos'),
               _buildQuickActions(context),
@@ -28,9 +32,14 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection(BuildContext context) {
+  Widget _buildHeroSection(BuildContext context, String userName) {
+    final user = context.watch<UserProvider>().currentUser;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
+    if (user == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -62,7 +71,7 @@ class HomePage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(
@@ -71,17 +80,20 @@ class HomePage extends StatelessWidget {
                   size: 32,
                 ),
               ),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.indigo),
+                backgroundImage: NetworkImage(user.photoUrl),
+                child: user.photoUrl.isEmpty
+                    ? Icon(Icons.person, color: Colors.indigo)
+                    : null,
               ),
             ],
           ),
           const SizedBox(height: 24),
-          const Text(
-            '¡Bienvenido de vuelta!',
-            style: TextStyle(
+          Text(
+            '¡Bienvenido de vuelta!, ${user.username}',
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -191,7 +203,7 @@ class _ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Card(
       elevation: 4,
       shadowColor: isDark ? Colors.transparent : color.shade100,
@@ -209,8 +221,11 @@ class _ActionCard extends StatelessWidget {
             gradient: LinearGradient(
               // Cambia el degradado interno según el tema
               colors: isDark
-                  ? [color.withOpacity(0.15), color.withOpacity(0.02)]
-                  : [Colors.white, color.shade50.withOpacity(0.5)],
+                  ? [
+                      color.withValues(alpha: 0.15),
+                      color.withValues(alpha: 0.02),
+                    ]
+                  : [Colors.white, color.shade50.withValues(alpha: 0.5)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -226,8 +241,8 @@ class _ActionCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  icon, 
-                  color: isDark ? color.shade300 : color.shade700, 
+                  icon,
+                  color: isDark ? color.shade300 : color.shade700,
                   size: 28,
                 ),
               ),
@@ -266,7 +281,7 @@ class _SummaryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -287,21 +302,18 @@ class _SummaryTile extends StatelessWidget {
             color: isDark ? color.withOpacity(0.2) : color.shade50,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon, 
-            color: isDark ? color.shade300 : color.shade600,
-          ),
+          child: Icon(icon, color: isDark ? color.shade300 : color.shade600),
         ),
         title: Text(
           title,
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
             fontSize: 16,
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         subtitle: Text(
-          subtitle, 
+          subtitle,
           style: TextStyle(
             color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
           ),

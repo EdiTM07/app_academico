@@ -33,7 +33,6 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => StudentProvider()..loadStudents(),
         ),
-        // 2. Agregas el nuevo provider de materias e inicializas sus datos
         ChangeNotifierProvider(
           create: (_) => SubjectProvider()..loadSubjects(),
         ),
